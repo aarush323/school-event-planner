@@ -65,7 +65,7 @@ def event_add():
 
     if request.method == 'GET':
         clubs = Club.query.all()
-        print("DEBUG: Clubs =", clubs)  # Optional debug
+      
         return render_template('add-event.html', clubs=clubs)
 
     if request.method == 'POST':
@@ -87,16 +87,22 @@ def event_add():
         return redirect('/dashboard')
 
 
-
 @app.route('/dashboard')
 def dashboard():
     if 'user_id' not in session:
         return redirect('/login')
-
     events = Event.query.all()
     clubs = {club.id: club.name for club in Club.query.all()}
-
-    return render_template('dashboard.html', events=events, clubs=clubs)
+    interested_counts = {}
+    for event in events:
+        count = EventAttendee.query.filter_by(event_id=event.id, interested=True).count()
+        interested_counts[event.id] = count
+    return render_template(
+        'dashboard.html',
+        events=events,
+        clubs=clubs,
+        interested_counts=interested_counts
+    )
 
 
 @app.route('/setup-clubs')

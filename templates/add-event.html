@@ -11,10 +11,15 @@
       <input type="text" name="title" placeholder="Name of Event" required><br>
       <input type="date" name="date" required><br>
       <input type="time" name="time" required><br>
+
       <select name="club_id" required>
-        {% for club in clubs %}
-          <option value="{{ club.id }}">{{ club.name }}</option>
-        {% endfor %}
+        {% if clubs %}
+          {% for club in clubs %}
+            <option value="{{ club.id }}">{{ club.name }}</option>
+          {% endfor %}
+        {% else %}
+          <option disabled selected>No clubs found</option>
+        {% endif %}
       </select><br><br>
 
       <button type="submit">Create Event</button>

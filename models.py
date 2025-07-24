@@ -1,7 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-
 db = SQLAlchemy()
-
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -9,20 +7,17 @@ class User(db.Model):
     password = db.Column(db.LargeBinary, nullable=False)
 
 class Club(db.Model):
-    __tablename__ = 'club'
+    __tablename__ = 'clubs' 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
 
 class Event(db.Model):
+    __tablename__ = 'events'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100))
     date = db.Column(db.String(20))
     time = db.Column(db.String(20))
-    club_id = db.Column(db.Integer, db.ForeignKey('club.id'))
-    
-
-   
-
+    club_id = db.Column(db.Integer, db.ForeignKey('clubs.id'))  
 
 class UserClub(db.Model):
     __tablename__ = 'user_clubs'
@@ -33,7 +28,7 @@ class EventAttendee(db.Model):
     __tablename__ = 'event_attendees'
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'), primary_key=True)
-    interested=db.Column(db.Integer, default = 0)
+    interested = db.Column(db.Boolean, default=False)  
 
 class EventRating(db.Model):
     __tablename__ = 'event_ratings'
