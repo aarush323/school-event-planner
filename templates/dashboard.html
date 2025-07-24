@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Welcome to the Dashboard</h2>
+
+        <a href="{{ url_for('event_add') }}">+ Add Event</a> |
+        <a href="{{ url_for('logout') }}">Logout</a>
+
+        <h3>Upcoming Events</h3>
+        {% if events %}
+            
+                {% for event in events %}
+                    <li>
+                        <strong>{{ event.title }}</strong><br>
+                        {{ event.date }} at {{ event.time }}<br>
+                        Club: {{ clubs[event.club_id] }}
+                       
+
+                        <form method="POST" action="{{ url_for('event_interaction') }}">
+                             <input type="hidden" name="event_id" value="{{ event.id }}">
+                            <button type = "submit" name="interested" value = "true">INTERESTED </button>
+                            <button type = "submit" name="interested" value = "false">NOT INTERESTED</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            
+        {% else %}
+            <p>No events yet.</p>
+        {% endif %}
+    </div>
+</body>
