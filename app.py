@@ -25,13 +25,25 @@ def register():
     if request.method == 'POST':
         email = request.form['username']
         password = request.form['password'].encode('utf-8')
+        role=request.form['role']
+        teacher_code = request.form.get('teacher_code', '')
+
+        if role == 'teacher' and teacher_code != 'admin123':
+            flash("Invalid teacher code.")
+            return redirect('/register')
+
+        if User.query.filter_by(email=email).first():
+            flash("User already exists.")
+            return redirect('/register')
+        
         hashed = bcrypt.hashpw(password, bcrypt.gensalt())
 
         if User.query.filter_by(email=email).first():
             flash("User already exists.")
             return redirect('/register')
 
-        new_user = User(email=email, password=hashed)
+        new_user = User(email=email, password=hashed, role=role)
+
         db.session.add(new_user)
         db.session.commit()
         flash("Registered successfully!")
@@ -47,6 +59,7 @@ def login():
     if request.method == 'POST':
         email = request.form['username']
         password = request.form['password'].encode('utf-8')
+        
 
         user = User.query.filter_by(email=email).first()
         if user and bcrypt.checkpw(password, user.password):
@@ -91,6 +104,8 @@ def event_add():
 def dashboard():
     if 'user_id' not in session:
         return redirect('/login')
+    
+    user = User.query.get(session['user_id'])
     events = Event.query.all()
     clubs = {club.id: club.name for club in Club.query.all()}
     interested_counts = {}
@@ -99,6 +114,7 @@ def dashboard():
         interested_counts[event.id] = count
     return render_template(
         'dashboard.html',
+        user=user,
         events=events,
         clubs=clubs,
         interested_counts=interested_counts

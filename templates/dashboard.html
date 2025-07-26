@@ -7,8 +7,9 @@
 <body>
     <div class="container">
         <h2>Welcome to the Dashboard</h2>
-
+{%if user.role == 'teacher' %}
         <a href="{{ url_for('event_add') }}">+ Add Event</a> |
+        {% endif %}
         <a href="{{ url_for('logout') }}">Logout</a>
 
         <h3>Upcoming Events</h3>
