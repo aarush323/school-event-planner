@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+    <h1>Dashboard is working!</h1>
+    <p>If you see this, the template is connected and routing is correct.</p>
+    
+    <form method = "POST">
+      <h3>Choose your Doctor for the appointment: </h3> 
+      {% for doctor in docs %}
+      <label> 
+      <input type="radio" name="doc_id" value = "{{ doctor.id }}" required>
+      Dr.{{doctor.email}}
+        </label><br>
+        {% endfor %}
+        <button type = "submit"> Choose Doctor</button>
+    </form>
+    
+
+
+  {% if selected_doctor %}
+  <form method="POST">
+    <input type="hidden" name="selected_doc_id" value="{{ selected_doctor.id }}">
+
+    {% for time in selected_doctor.all_time %}
+      <label>
+        <input type="radio" name="time" value="{{ time }}"
+               {% if time in selected_doctor.booked_time %}
+                disabled 
+                {% endif %} required>
+
+
+        {{ time }} {% if time in selected_doctor.booked_time %}(Booked){% endif %}
+      </label><br>
+    {% endfor %}
+
+    <button type="submit">Book Slot</button>
+  </form>
+  {% endif %}
+
+
+   
+
+
+</body>
+</html>
